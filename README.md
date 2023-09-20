@@ -1,8 +1,8 @@
 <div align="center">
 
-# asdf-secrets-manager [![Build](https://github.com/FIAV1/asdf-secrets-manager/actions/workflows/build.yml/badge.svg)](https://github.com/FIAV1/asdf-secrets-manager/actions/workflows/build.yml) [![Lint](https://github.com/FIAV1/asdf-secrets-manager/actions/workflows/lint.yml/badge.svg)](https://github.com/FIAV1/asdf-secrets-manager/actions/workflows/lint.yml)
+# asdf-bitwarden-secrets-manager [![Build](https://github.com/FIAV1/asdf-bitwarden-secrets-manager/actions/workflows/build.yml/badge.svg)](https://github.com/FIAV1/asdf-bitwarden-secrets-manager/actions/workflows/build.yml) [![Lint](https://github.com/FIAV1/asdf-bitwarden-secrets-manager/actions/workflows/lint.yml/badge.svg)](https://github.com/FIAV1/asdf-bitwarden-secrets-manager/actions/workflows/lint.yml)
 
-[secrets-manager](https://github.com/FIAV1/asdf-secrets-manager) plugin for the [asdf version manager](https://asdf-vm.com).
+[bitwarden-secrets-manager](https://github.com/FIAV1/asdf-bitwarden-secrets-manager) plugin for the [asdf version manager](https://asdf-vm.com).
 
 </div>
 
@@ -15,35 +15,32 @@
 
 # Dependencies
 
-**TODO: adapt this section**
-
 - `bash`, `curl`, `tar`: generic POSIX utilities.
-- `SOME_ENV_VAR`: set this environment variable in your shell config to load the correct version of tool x.
 
 # Install
 
 Plugin:
 
 ```shell
-asdf plugin add secrets-manager
+asdf plugin add bitwarden-secrets-manager
 # or
-asdf plugin add secrets-manager https://github.com/FIAV1/asdf-secrets-manager.git
+asdf plugin add bitwarden-secrets-manager https://github.com/FIAV1/asdf-bitwarden-secrets-manager.git
 ```
 
-secrets-manager:
+bitwarden-secrets-manager:
 
 ```shell
 # Show all installable versions
-asdf list-all secrets-manager
+asdf list-all bitwarden-secrets-manager
 
 # Install specific version
-asdf install secrets-manager latest
+asdf install bitwarden-secrets-manager latest
 
 # Set a version globally (on your ~/.tool-versions file)
-asdf global secrets-manager latest
+asdf global bitwarden-secrets-manager latest
 
-# Now secrets-manager commands are available
-secrets-manager --help
+# Now bitwarden-secrets-manager commands are available
+bws --version
 ```
 
 Check [asdf](https://github.com/asdf-vm/asdf) readme for more instructions on how to
@@ -53,7 +50,7 @@ install & manage versions.
 
 Contributions of any kind welcome! See the [contributing guide](contributing.md).
 
-[Thanks goes to these contributors](https://github.com/FIAV1/asdf-secrets-manager/graphs/contributors)!
+[Thanks goes to these contributors](https://github.com/FIAV1/asdf-bitwarden-secrets-manager/graphs/contributors)!
 
 # License
 

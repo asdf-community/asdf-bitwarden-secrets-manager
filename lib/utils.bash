@@ -2,10 +2,9 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for secrets-manager.
-GH_REPO="https://github.com/FIAV1/asdf-secrets-manager"
-TOOL_NAME="secrets-manager"
-TOOL_TEST="secrets-manager --help"
+GH_REPO="https://github.com/bitwarden/sdk"
+TOOL_NAME="bitwarden-secrets-manager"
+TOOL_TEST="bws --help"
 
 fail() {
 	echo -e "asdf-$TOOL_NAME: $*"
@@ -14,7 +13,6 @@ fail() {
 
 curl_opts=(-fsSL)
 
-# NOTE: You might want to remove this if secrets-manager is not hosted on GitHub releases.
 if [ -n "${GITHUB_API_TOKEN:-}" ]; then
 	curl_opts=("${curl_opts[@]}" -H "Authorization: token $GITHUB_API_TOKEN")
 fi
@@ -27,13 +25,36 @@ sort_versions() {
 list_github_tags() {
 	git ls-remote --tags --refs "$GH_REPO" |
 		grep -o 'refs/tags/.*' | cut -d/ -f3- |
-		sed 's/^v//' # NOTE: You might want to adapt this sed to remove non-version strings from tags
+		sed 's/^bws-v//' | sed 's/^bws-cli-v//'
 }
 
 list_all_versions() {
-	# TODO: Adapt this. By default we simply list the tag names from GitHub releases.
-	# Change this function if secrets-manager has other means of determining installable versions.
 	list_github_tags
+}
+
+get_arch_and_environment() {
+	local -r environment=$(uname | tr '[:upper:]' '[:lower:]')
+	local -r arch=$(arch)
+
+	if [[ $environment == "darwin" ]]; then
+		if [[ $arch != "x86_64" ]] && [[ $arch != "aarch64" ]]; then
+			echo "macos-universal"
+		else
+			echo "$(arch)"-apple-"$environment"
+		fi
+	elif [[ $environment == "linux" ]]; then
+		echo "$(arch)"-unknown-"$environment"-gnu
+	else
+		fail "unknown environment brand for $environment"
+	fi
+}
+
+get_release_name() {
+	local -r version=$1
+
+	git ls-remote --tags --refs "$GH_REPO" |
+		grep -o 'refs/tags/.*' | cut -d/ -f3- |
+		grep "$version"
 }
 
 download_release() {
@@ -41,8 +62,7 @@ download_release() {
 	version="$1"
 	filename="$2"
 
-	# TODO: Adapt the release URL convention for secrets-manager
-	url="$GH_REPO/archive/v${version}.tar.gz"
+	url="$GH_REPO/releases/download/$(get_release_name "$version")/bws-$(get_arch_and_environment)-$version.zip"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -61,9 +81,9 @@ install_version() {
 		mkdir -p "$install_path"
 		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
 
-		# TODO: Assert secrets-manager executable exists.
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
+		chmod +x "$install_path/$tool_cmd"
 		test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
 
 		echo "$TOOL_NAME $version installation was successful!"
